@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
   <title>Bluetooth, Slider & Stream</title>
   <style>
     body {
@@ -10,19 +9,8 @@
       font-family: Arial, sans-serif;
       margin: 20px;
     }
-    h1, h2 {
+    h1 {
       color: #333;
-    }
-    input[type="range"] {
-      width: 80%;
-      margin: 10px auto;
-      display: block;
-    }
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
     }
     ul {
       list-style-type: none;
@@ -31,42 +19,42 @@
     li {
       margin: 10px 0;
       padding: 10px;
-      background-color: #f3f3f3;
+      background-color: #f0f0f0;
       cursor: pointer;
     }
     li:hover {
       background-color: #ddd;
     }
-    iframe {
-      border: 1px solid #333;
-      margin: 20px auto;
-      display: block;
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    input[type="range"] {
+      width: 80%;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
   <h1>Bluetooth, Slider & Stream</h1>
-
   <h2>Paired Bluetooth Devices</h2>
   <ul id="pairedDevices">
-    <li>No paired devices found.</li>
+    <!-- Paired devices will be listed here -->
   </ul>
   <button id="refreshDevices">Refresh Paired Devices</button>
-
   <h2>Slider to control TD</h2>
-  <input type="range" class="controlSlider" min="0" max="100" value="50">
-
+  <input type="range" id="sliderControl" min="0" max="100" value="50" />
   <h2>Slider controlled by TD</h2>
-  <input type="range" class="deviceSlider" min="0" max="100" value="50" disabled>
-
+  <input type="range" id="sliderFeedback" min="0" max="100" value="50" />
   <h2>Video Stream</h2>
   <iframe
     src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD"
-    width="800"
-    height="450"
+    width="640"
+    height="360"
+    frameborder="0"
     allow="camera; microphone; fullscreen"
   ></iframe>
-
   <script src="script.js"></script>
 </body>
 </html>
