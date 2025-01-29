@@ -1,10 +1,11 @@
+// WebSocket setup
 const ws = new WebSocket("wss://hodoonamu-bbd19873c971.herokuapp.com/");
 const sliderControl = document.getElementById("sliderControl");
 const sliderFeedback = document.getElementById("sliderFeedback");
 const pairedDevicesList = document.getElementById("pairedDevices");
 const refreshDevicesButton = document.getElementById("refreshDevices");
 
-// Initialize WebSocket connection
+// WebSocket connection events
 ws.onopen = () => {
   console.log("WebSocket connected to:", ws.url);
 };
@@ -30,7 +31,7 @@ ws.onerror = (error) => {
   console.error("WebSocket error:", error);
 };
 
-// Send slider control data
+// Slider control event
 sliderControl.addEventListener("input", () => {
   const value = sliderControl.value / 100;
   const data = { sliderValue: value };
@@ -38,33 +39,38 @@ sliderControl.addEventListener("input", () => {
   console.log("Sent to server:", data);
 });
 
-// Fetch available Bluetooth devices (alternative to getDevices)
+// Bluetooth: Fetch paired devices
 refreshDevicesButton.addEventListener("click", async () => {
+  pairedDevicesList.innerHTML = "";
   try {
-    console.log("[Bluetooth] Requesting a device...");
-    const device = await navigator.bluetooth.requestDevice({
-      acceptAllDevices: true,
-      optionalServices: ["battery_service"],
-    });
-
-    // Clear the list and show the selected device
-    pairedDevicesList.innerHTML = "";
-    const listItem = document.createElement("li");
-    listItem.textContent = `${device.name || "Unknown Device"} (${device.id})`;
-    listItem.addEventListener("click", () => connectToDevice(device));
-    pairedDevicesList.appendChild(listItem);
-    console.log("[Bluetooth] Selected device:", device);
+    const devices = await navigator.bluetooth.getDevices();
+    if (devices.length === 0) {
+      const noDevicesItem = document.createElement("li");
+      noDevicesItem.textContent = "No paired devices found.";
+      pairedDevicesList.appendChild(noDevicesItem);
+    } else {
+      devices.forEach((device) => {
+        const deviceItem = document.createElement("li");
+        deviceItem.textContent = `${device.name || "Unknown Device"} (${device.id})`;
+        deviceItem.addEventListener("click", () => connectToDevice(device));
+        pairedDevicesList.appendChild(deviceItem);
+      });
+    }
   } catch (error) {
-    console.error("[Bluetooth] Error requesting device:", error);
+    console.error("Error fetching paired devices:", error);
+    const errorItem = document.createElement("li");
+    errorItem.textContent = "Error fetching devices. Check browser support.";
+    pairedDevicesList.appendChild(errorItem);
   }
 });
 
-// Connect to a specific device
-function connectToDevice(device) {
-  device.gatt
-    .connect()
-    .then((server) => {
-      console.log(`[Bluetooth] Connected to device: ${device.name}`);
-    })
-    .catch((error) => console.error("[Bluetooth] Error connecting to device:", error));
+// Bluetooth: Connect to a device
+async function connectToDevice(device) {
+  try {
+    const server = await device.gatt.connect();
+    console.log(`Connected to device: ${device.name}`);
+    // Add additional device-specific logic here if needed
+  } catch (error) {
+    console.error(`Error connecting to device: ${device.name}`, error);
+  }
 }
