@@ -45,23 +45,22 @@ controlSlider.addEventListener("input", () => {
   }
 });
 
-// 페어링된 Bluetooth 장치 표시
+// Bluetooth 장치 검색
 async function refreshPairedDevices() {
   try {
-    console.log("[Bluetooth] Fetching paired devices...");
-    const devices = await navigator.bluetooth.getDevices();
+    console.log("[Bluetooth] Requesting a device...");
+    const device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true, // 모든 장치 허용
+      optionalServices: ['battery_service'], // 필요시 서비스 지정
+    });
 
-    pairedDevicesList.innerHTML = ""; // 기존 목록 초기화
-    if (devices.length === 0) {
-      pairedDevicesList.innerHTML = "<li>No paired devices found.</li>";
-    } else {
-      devices.forEach((device) => {
-        const listItem = document.createElement("li");
-        listItem.textContent = `${device.name || "Unnamed Device"} (${device.id})`;
-        listItem.addEventListener("click", () => connectToDevice(device));
-        pairedDevicesList.appendChild(listItem);
-      });
-    }
+    // 기존 장치 리스트 초기화 후 새 장치 추가
+    pairedDevicesList.innerHTML = ""; 
+    const listItem = document.createElement("li");
+    listItem.textContent = `${device.name || "Unnamed Device"} (${device.id})`;
+    pairedDevicesList.appendChild(listItem);
+
+    console.log(`[Bluetooth] Found device: ${device.name} (${device.id})`);
   } catch (error) {
     console.error("[Bluetooth] Error fetching devices:", error);
   }
@@ -80,6 +79,3 @@ async function connectToDevice(device) {
 
 // 버튼 클릭 이벤트
 refreshDevicesButton.addEventListener("click", refreshPairedDevices);
-
-// 초기 실행
-document.addEventListener("DOMContentLoaded", refreshPairedDevices);
