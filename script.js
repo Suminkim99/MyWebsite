@@ -22,7 +22,12 @@ ws.onmessage = (event) => {
       controlledSlider.value = data.sliderValue * 100; // 0~1 범위 → 0~100 범위
     }
   } catch (error) {
-    console.error("[WebSocket] Message error:", error);
+    // 메시지가 JSON 형식이 아닌 경우 무시
+    if (event.data === "ping") {
+      console.log("[WebSocket] Ping received, ignoring.");
+    } else {
+      console.error("[WebSocket] Message error:", error);
+    }
   }
 };
 
@@ -45,7 +50,7 @@ controlSlider.addEventListener("input", () => {
   }
 });
 
-// Bluetooth 장치 검색
+// Bluetooth 장치 검색 및 선택
 async function refreshPairedDevices() {
   try {
     console.log("[Bluetooth] Requesting a device...");
@@ -55,9 +60,10 @@ async function refreshPairedDevices() {
     });
 
     // 기존 장치 리스트 초기화 후 새 장치 추가
-    pairedDevicesList.innerHTML = ""; 
+    pairedDevicesList.innerHTML = "";
     const listItem = document.createElement("li");
     listItem.textContent = `${device.name || "Unnamed Device"} (${device.id})`;
+    listItem.addEventListener("click", () => connectToDevice(device));
     pairedDevicesList.appendChild(listItem);
 
     console.log(`[Bluetooth] Found device: ${device.name} (${device.id})`);
