@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Bluetooth, Slider & Stream</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bluetooth, Slider, and WebSocket</title>
   <style>
     body {
-      text-align: center;
       font-family: Arial, sans-serif;
+      text-align: center;
       margin: 20px;
-    }
-    h1 {
-      color: #333;
     }
     ul {
       list-style-type: none;
@@ -19,42 +17,37 @@
     li {
       margin: 10px 0;
       padding: 10px;
-      background-color: #f0f0f0;
+      background-color: #f3f3f3;
       cursor: pointer;
     }
     li:hover {
       background-color: #ddd;
     }
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-    }
     input[type="range"] {
       width: 80%;
-      margin: 20px 0;
+      margin: 10px auto;
+      display: block;
+    }
+    button {
+      margin: 20px auto;
+      padding: 10px 20px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <h1>Bluetooth, Slider & Stream</h1>
+  <h1>Bluetooth, Slider & WebSocket</h1>
+
   <h2>Paired Bluetooth Devices</h2>
-  <ul id="pairedDevices">
-    <!-- Paired devices will be listed here -->
-  </ul>
+  <ul id="pairedDevices"></ul>
   <button id="refreshDevices">Refresh Paired Devices</button>
+
   <h2>Slider to control TD</h2>
-  <input type="range" id="sliderControl" min="0" max="100" value="50" />
+  <input type="range" id="sliderControl" min="0" max="100" value="50">
+
   <h2>Slider controlled by TD</h2>
-  <input type="range" id="sliderFeedback" min="0" max="100" value="50" />
-  <h2>Video Stream</h2>
-  <iframe
-    src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD"
-    width="640"
-    height="360"
-    frameborder="0"
-    allow="camera; microphone; fullscreen"
-  ></iframe>
+  <input type="range" id="sliderFeedback" min="0" max="100" value="50" readonly>
+
   <script src="script.js"></script>
 </body>
 </html>
