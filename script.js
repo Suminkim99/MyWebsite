@@ -10,6 +10,9 @@ const refreshDevicesButton = document.getElementById("refreshDevices");
 // WebSocket 이벤트 처리
 ws.onopen = () => {
   console.log("[WebSocket] Connection established.");
+  // 초기 슬라이더 값을 전송
+  const initialValue = controlSlider.value / 100;
+  ws.send(JSON.stringify({ sliderValue: initialValue }));
 };
 
 ws.onmessage = (event) => {
@@ -64,6 +67,7 @@ async function refreshPairedDevices() {
     }
   } catch (error) {
     console.error("[Bluetooth] Error fetching devices:", error);
+    alert("Failed to fetch paired devices. Ensure your browser supports Bluetooth APIs.");
   }
 }
 
@@ -75,6 +79,7 @@ async function connectToDevice(device) {
     console.log("[Bluetooth] Connected:", server);
   } catch (error) {
     console.error("[Bluetooth] Connection error:", error);
+    alert("Failed to connect to device.");
   }
 }
 
