@@ -6,31 +6,33 @@
   <title>Bluetooth, Slider & Stream</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       text-align: center;
-      margin: 20px;
+      font-family: Arial, sans-serif;
     }
     h1, h2 {
       margin: 20px 0;
     }
     ul {
-      list-style: none;
+      list-style-type: none;
       padding: 0;
     }
     li {
-      background: #f3f3f3;
-      margin: 5px;
       padding: 10px;
+      background-color: #f3f3f3;
+      margin: 5px;
       cursor: pointer;
     }
     li:hover {
-      background: #ddd;
+      background-color: #ddd;
     }
-    button, input[type="range"] {
-      margin: 10px;
+    button {
+      margin: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
     }
     iframe {
-      margin: 20px auto;
+      margin-top: 20px;
       width: 80%;
       height: 400px;
       border: 1px solid #ccc;
@@ -39,7 +41,6 @@
 </head>
 <body>
   <h1>Bluetooth, Slider & Stream</h1>
-
   <h2>Paired Bluetooth Devices</h2>
   <ul id="pairedDevices">
     <li>No paired devices found.</li>
@@ -53,10 +54,10 @@
   <input type="range" id="controlledSlider" min="0" max="100" value="50" disabled>
 
   <h2>Video Stream</h2>
-  <iframe
-    src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD"
-    allow="camera; microphone; fullscreen">
-  </iframe>
+  <iframe 
+    src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD" 
+    allow="camera; microphone; fullscreen"
+  ></iframe>
 
   <script src="script.js"></script>
 </body>

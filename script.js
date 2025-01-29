@@ -45,14 +45,39 @@ controlSlider.addEventListener("input", () => {
   }
 });
 
-// Bluetooth 장치 연결
+// 페어링된 Bluetooth 장치 표시
 async function refreshPairedDevices() {
   try {
-    console.log("[Bluetooth] Fetching paired devices...");
-    // Web Bluetooth API를 사용할 수 없는 경우의 로직
-    pairedDevicesList.innerHTML = "<li>No paired devices found.</li>";
+    console.log("[Bluetooth] Requesting a device...");
+    const device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true, // 모든 장치 허용
+      optionalServices: ['battery_service'], // 필요시 서비스 지정
+    });
+
+    // 기존 장치 리스트 초기화 후 새 장치 추가
+    pairedDevicesList.innerHTML = "";
+    const listItem = document.createElement("li");
+    listItem.textContent = `${device.name || "Unnamed Device"} (${device.id})`;
+    listItem.addEventListener("click", () => connectToDevice(device));
+    pairedDevicesList.appendChild(listItem);
+
+    console.log(`[Bluetooth] Found device: ${device.name} (${device.id})`);
   } catch (error) {
+    // 에러 발생 시 사용자에게 알림
     console.error("[Bluetooth] Error fetching devices:", error);
+    pairedDevicesList.innerHTML =
+      "<li>Error fetching devices or no devices selected. Please try again.</li>";
+  }
+}
+
+// Bluetooth 장치 연결
+async function connectToDevice(device) {
+  try {
+    console.log(`[Bluetooth] Connecting to ${device.name}...`);
+    const server = await device.gatt.connect();
+    console.log("[Bluetooth] Connected:", server);
+  } catch (error) {
+    console.error("[Bluetooth] Connection error:", error);
   }
 }
 
