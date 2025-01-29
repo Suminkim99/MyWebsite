@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyWebsite</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    input[type="range"] {
+      width: 50%;
+      margin: 10px auto;
+      display: block;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 14px;
+      background-color: #f3f3f3;
+      cursor: pointer;
+    }
+    li:hover {
+      background-color: #ddd;
+    }
+    iframe {
+      border: 1px solid #333;
+      display: block;
+      margin: 20px auto;
+    }
+    button {
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>MyWebsite: Hodoonamu</h1>
+
+  <!-- Bluetooth 페어링된 장치 목록 -->
+  <h2>Previously Paired Bluetooth Devices</h2>
+  <ul id="pairedDevices">
+    <!-- 페어링된 장치 목록이 여기에 추가됨 -->
+  </ul>
+  <button id="addDevice">Add New Device</button>
+  <p>Click on a device to connect.</p>
+
+  <!-- 슬라이더 -->
+  <h2>Slider to Control</h2>
+  <input type="range" class="controlSlider" min="0" max="100" value="50">
+  <h2>Slider Controlled by TD</h2>
+  <input type="range" class="controlledSlider" min="0" max="100" value="50">
+
+  <!-- Video Streaming -->
+  <h2>TD Stream via VDO.Ninja</h2>
+  <iframe
+    src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD"
+    width="1280"
+    height="720"
+    frameborder="0"
+    allow="camera; microphone; fullscreen"
+  ></iframe>
+
+  <script src="script.js"></script>
+</body>
+</html>
