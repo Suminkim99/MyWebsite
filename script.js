@@ -24,6 +24,7 @@ ws.onmessage = (event) => {
 
     // 페어링된 장치 목록 처리
     if (data.action === 'pairedDevices' && Array.isArray(data.devices)) {
+      console.log("[WebSocket] Paired Devices received:", data.devices);
       pairedDevicesList.innerHTML = "";
       if (data.devices.length === 0) {
         pairedDevicesList.innerHTML = "<li>No paired devices found.</li>";

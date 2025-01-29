@@ -3,7 +3,7 @@
 const WebSocket = require('ws');
 const BluetoothSerialPort = require('bluetooth-serial-port').BluetoothSerialPort;
 
-// WebSocket 서버 주소 (로컬 서버인 경우 'ws://localhost:8080/')
+// WebSocket 서버 주소 (로컬 테스트 시 'ws://localhost:8080/')
 const WEBSOCKET_SERVER_URL = 'ws://localhost:8080/';
 const ws = new WebSocket(WEBSOCKET_SERVER_URL);
 const bluetooth = new BluetoothSerialPort();
@@ -35,20 +35,6 @@ ws.on('message', (data) => {
     }
   } catch (error) {
     console.error('[Bridge] 메시지 파싱 오류:', error);
-  }
-});
-
-// WebSocket 에러 처리
-ws.on('error', (error) => {
-  console.error('[Bridge] WebSocket 오류:', error);
-});
-
-// WebSocket 연결 종료 시
-ws.on('close', () => {
-  console.log('[Bridge] WebSocket 연결 종료됨.');
-  if (isConnected) {
-    bluetooth.close();
-    console.log('[Bridge] Bluetooth 연결 종료됨.');
   }
 });
 
