@@ -1,44 +1,75 @@
-// WebSocket 설정
-const ws = new WebSocket("ws://localhost:8080");
+let ws;
 
-// DOM 요소
-const controlSlider = document.getElementById("controlSlider");
-const controlledSlider = document.getElementById("controlledSlider");
-const pairedDevicesList = document.getElementById("pairedDevices");
+// WebSocket 초기화 함수
+function initializeWebSocket() {
+  ws = new WebSocket('ws://localhost:3000');
 
-// WebSocket 이벤트 처리
-ws.onopen = () => {
-  console.log("[WebSocket] Connected to server.");
-};
+  ws.onopen = () => {
+    console.log('[WebSocket] Connected to server.');
+  };
 
-ws.onmessage = (event) => {
-  console.log("[WebSocket] Received:", event.data);
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      console.log('[WebSocket] Received:', data);
 
-  try {
-    const data = JSON.parse(event.data);
-    if (data.sliderValue !== undefined) {
-      controlledSlider.value = data.sliderValue * 100; // 서버에서 받은 값을 슬라이더에 반영
+      if (data.type === 'devices') {
+        deviceList.innerHTML = '';
+        data.devices.forEach((device) => {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${device.name || 'Unnamed Device'} (${device.address})`;
+          listItem.addEventListener('click', () => connectToDevice(device.address));
+          deviceList.appendChild(listItem);
+        });
+      } else if (data.type === 'status') {
+        alert(data.message);
+      } else if (data.type === 'error') {
+        console.error('[WebSocket] Error:', data.message);
+      }
+    } catch (error) {
+      console.error('[WebSocket] Message parse error:', error);
     }
-  } catch (error) {
-    console.error("[WebSocket] Parsing error:", error);
+  };
+
+  ws.onerror = (error) => {
+    console.error('[WebSocket] Error:', error);
+  };
+
+  ws.onclose = () => {
+    console.warn('[WebSocket] Connection closed. Attempting to reconnect...');
+    setTimeout(initializeWebSocket, 3000); // 3초 후에 WebSocket 재연결 시도
+  };
+}
+
+// WebSocket 연결 상태를 확인하고 메시지를 보내는 함수
+function sendMessage(message) {
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify(message));
+  } else {
+    console.warn('[WebSocket] Cannot send message. WebSocket is not open.');
   }
-};
+}
 
-ws.onerror = (error) => {
-  console.error("[WebSocket] Error:", error);
-};
+// DOM 요소 참조
+const refreshButton = document.getElementById('refreshDevices');
+const deviceList = document.getElementById('deviceList');
 
-// 슬라이더 값 전송
-controlSlider.addEventListener("input", () => {
-  const value = controlSlider.value / 100;
-  ws.send(JSON.stringify({ sliderValue: value }));
-  console.log("[Slider] Sent:", { sliderValue: value });
+// 버튼 이벤트 핸들러
+refreshButton.addEventListener('click', () => {
+  if (ws.readyState === WebSocket.OPEN) {
+    sendMessage({ command: 'listDevices' });
+  } else {
+    console.warn('[WebSocket] WebSocket is not open. Retrying connection...');
+    initializeWebSocket(); // WebSocket 연결이 끊어진 경우 다시 초기화
+  }
 });
 
-// 블루투스 장치 표시
-async function listBluetoothDevices() {
-  pairedDevicesList.innerHTML = "<li>Loading paired devices...</li>";
-  // 실제 블루투스 시리얼 포트 장치를 표시하려면 서버와 통신 필요
-  console.log("[Bluetooth] Fetching paired devices...");
+// Bluetooth 장치 연결 요청
+function connectToDevice(address) {
+  sendMessage({ command: 'connect', address });
 }
-listBluetoothDevices();
+
+// 초기 실행
+document.addEventListener('DOMContentLoaded', () => {
+  initializeWebSocket(); // WebSocket 초기화
+});

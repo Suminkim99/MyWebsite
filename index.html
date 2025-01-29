@@ -5,19 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bluetooth, Slider & Stream</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-    ul { list-style: none; padding: 0; }
-    li { background: #f3f3f3; margin: 5px; padding: 10px; cursor: pointer; }
-    li:hover { background: #ddd; }
-    button, input[type="range"] { margin: 10px; }
-    iframe { margin: 20px auto; width: 80%; height: 400px; border: 1px solid #ccc; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    h1, h2 {
+      margin: 20px 0;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #f3f3f3;
+      margin: 5px;
+      padding: 10px;
+      cursor: pointer;
+    }
+    li:hover {
+      background: #ddd;
+    }
+    button, input[type="range"] {
+      margin: 10px;
+    }
+    iframe {
+      margin: 20px auto;
+      width: 80%;
+      height: 400px;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
   <h1>Bluetooth, Slider & Stream</h1>
 
   <h2>Paired Bluetooth Devices</h2>
-  <ul id="pairedDevices"></ul>
+  <ul id="pairedDevices">
+    <li>No paired devices found.</li>
+  </ul>
+  <button id="refreshDevices">Refresh Paired Devices</button>
 
   <h2>Slider to control TD</h2>
   <input type="range" id="controlSlider" min="0" max="100" value="50">
@@ -26,7 +53,10 @@
   <input type="range" id="controlledSlider" min="0" max="100" value="50" disabled>
 
   <h2>Video Stream</h2>
-  <iframe src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD" allow="camera; microphone; fullscreen"></iframe>
+  <iframe
+    src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD"
+    allow="camera; microphone; fullscreen">
+  </iframe>
 
   <script src="script.js"></script>
 </body>
