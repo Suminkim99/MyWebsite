@@ -1,59 +1,45 @@
-const WebSocket = require("ws");
-const SerialPort = require("bluetooth-serial-port").BluetoothSerialPort;
+const WebSocket = require('ws');
 
-// WebSocket 서버 설정
-const wss = new WebSocket.Server({ port: 8080 });
-const bluetoothSerialPort = new SerialPort();
+const PORT = process.env.PORT || 8080;
 
-console.log("[Server] WebSocket server running on ws://localhost:8080");
+// WebSocket 서버 생성
+const server = new WebSocket.Server({ port: PORT }, () => {
+  console.log(`[WebSocket Server] Listening on port ${PORT}`);
+});
 
-wss.on("connection", (ws) => {
-  console.log("[WebSocket] Client connected.");
+// 연결된 클라이언트 저장
+let clients = [];
 
-  ws.on("message", (message) => {
-    console.log("[WebSocket] Received from client:", message);
+server.on('connection', (ws) => {
+  console.log('[WebSocket Server] New client connected.');
+  clients.push(ws);
 
-    // 클라이언트로부터 받은 데이터를 블루투스 장치로 전송
+  // 클라이언트로부터 메시지 수신
+  ws.on('message', (message) => {
+    console.log(`[WebSocket Server] Received: ${message}`);
     try {
-      bluetoothSerialPort.write(Buffer.from(message, "utf-8"), (err, bytesWritten) => {
-        if (err) console.error("[Bluetooth] Write error:", err);
-        else console.log("[Bluetooth] Sent to device:", message);
+      // 메시지를 다시 모든 클라이언트에 브로드캐스트
+      const parsedMessage = JSON.parse(message);
+      clients.forEach((client) => {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(parsedMessage));
+        }
       });
     } catch (error) {
-      console.error("[Bluetooth] Error writing to device:", error);
+      console.error(`[WebSocket Server] Error parsing message: ${error.message}`);
     }
   });
 
-  ws.on("close", () => {
-    console.log("[WebSocket] Client disconnected.");
+  // 연결 종료 시 클라이언트 제거
+  ws.on('close', () => {
+    console.log('[WebSocket Server] Client disconnected.');
+    clients = clients.filter((client) => client !== ws);
+  });
+
+  // 에러 처리
+  ws.on('error', (error) => {
+    console.error(`[WebSocket Server] Error: ${error.message}`);
   });
 });
 
-// 블루투스 장치 스캔 및 연결
-bluetoothSerialPort.on("found", (address, name) => {
-  console.log(`[Bluetooth] Found device: ${name} (${address})`);
-
-  // 연결 시도
-  bluetoothSerialPort.findSerialPortChannel(address, (channel) => {
-    bluetoothSerialPort.connect(address, channel, () => {
-      console.log(`[Bluetooth] Connected to ${name}`);
-    }, (err) => {
-      console.error("[Bluetooth] Connection error:", err);
-    });
-  });
-});
-
-bluetoothSerialPort.on("data", (buffer) => {
-  const receivedData = buffer.toString("utf-8");
-  console.log("[Bluetooth] Received from device:", receivedData);
-
-  // 클라이언트로 데이터 전송
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(receivedData);
-    }
-  });
-});
-
-// 블루투스 검색 시작
-bluetoothSerialPort.inquire();
+console.log(`[WebSocket Server] Running on ws://localhost:${PORT}`);
