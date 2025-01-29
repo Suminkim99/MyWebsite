@@ -1,4 +1,6 @@
-// WebSocket 설정
+// script.js
+
+// WebSocket 설정 (원격 서버 URL로 변경)
 const ws = new WebSocket("wss://hodoonamu-bbd19873c971.herokuapp.com/");
 
 // DOM 요소 참조
@@ -10,12 +12,24 @@ const refreshDevicesButton = document.getElementById("refreshDevices");
 // WebSocket 이벤트 처리
 ws.onopen = () => {
   console.log("[WebSocket] Connection established.");
+  // 브리지 애플리케이션과의 통신이 자동으로 이루어짐
 };
 
 ws.onmessage = (event) => {
   try {
     const data = JSON.parse(event.data);
     console.log("[WebSocket] Received:", data);
+
+    // Bluetooth 데이터 처리
+    if (data.bluetoothData !== undefined) {
+      // Bluetooth 데이터를 웹 페이지에 표시하거나 추가 기능 구현
+      console.log(`[WebSocket] Bluetooth Data: ${data.bluetoothData}`);
+      // 예: 화면에 표시
+      const bluetoothDataDisplay = document.getElementById("bluetoothData");
+      if (bluetoothDataDisplay) {
+        bluetoothDataDisplay.textContent = `Bluetooth Data: ${data.bluetoothData}`;
+      }
+    }
 
     // WebSocket 메시지를 슬라이더에 반영
     if (data.sliderValue !== undefined) {
@@ -45,44 +59,15 @@ controlSlider.addEventListener("input", () => {
   }
 });
 
-// 페어링된 Bluetooth 장치 표시
-async function refreshPairedDevices() {
-  try {
-    console.log("[Bluetooth] Requesting a device...");
-    const device = await navigator.bluetooth.requestDevice({
-      acceptAllDevices: true, // 모든 장치 허용
-      optionalServices: ['battery_service'], // 필요시 서비스 지정
-    });
+// Bluetooth 장치 목록 및 연결 기능은 브리지 애플리케이션에서 처리됨
+// 따라서 웹 클라이언트에서는 이를 단순히 표시하거나 추가 기능을 구현
 
-    // 기존 장치 리스트 초기화 후 새 장치 추가
-    pairedDevicesList.innerHTML = "";
-    const listItem = document.createElement("li");
-    listItem.textContent = `${device.name || "Unnamed Device"} (${device.id})`;
-    listItem.addEventListener("click", () => connectToDevice(device));
-    pairedDevicesList.appendChild(listItem);
+// 버튼 클릭 이벤트 (페어링된 장치 목록 필요 없음)
+refreshDevicesButton.addEventListener("click", () => {
+  alert("Bluetooth 장치 관리는 브리지 애플리케이션에서 처리됩니다.");
+});
 
-    console.log(`[Bluetooth] Found device: ${device.name} (${device.id})`);
-  } catch (error) {
-    // 에러 발생 시 사용자에게 알림
-    console.error("[Bluetooth] Error fetching devices:", error);
-    pairedDevicesList.innerHTML =
-      "<li>Error fetching devices or no devices selected. Please try again.</li>";
-  }
-}
-
-// Bluetooth 장치 연결
-async function connectToDevice(device) {
-  try {
-    console.log(`[Bluetooth] Connecting to ${device.name}...`);
-    const server = await device.gatt.connect();
-    console.log("[Bluetooth] Connected:", server);
-  } catch (error) {
-    console.error("[Bluetooth] Connection error:", error);
-  }
-}
-
-// 버튼 클릭 이벤트
-refreshDevicesButton.addEventListener("click", refreshPairedDevices);
-
-// 초기 실행
-document.addEventListener("DOMContentLoaded", refreshPairedDevices);
+// 초기 실행 (브리지가 처리)
+document.addEventListener("DOMContentLoaded", () => {
+  pairedDevicesList.innerHTML = "<li>Bluetooth 장치 관리는 브리지 애플리케이션에서 처리됩니다.</li>";
+});

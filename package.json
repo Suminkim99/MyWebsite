@@ -7,6 +7,19 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
-  }
+    "bluetooth-serial-port": "^3.0.2",
+    "express": "^4.18.2",
+    "ws": "^8.18.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Suminkim99/MyWebsite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Suminkim99/MyWebsite/issues"
+  },
+  "homepage": "https://github.com/Suminkim99/MyWebsite#readme"
 }

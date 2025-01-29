@@ -1,3 +1,5 @@
+// server.js
+
 const WebSocket = require('ws');
 
 const PORT = process.env.PORT || 8080;
@@ -18,8 +20,8 @@ server.on('connection', (ws) => {
   ws.on('message', (message) => {
     console.log(`[WebSocket Server] Received: ${message}`);
     try {
-      // 메시지를 다시 모든 클라이언트에 브로드캐스트
       const parsedMessage = JSON.parse(message);
+      // 모든 클라이언트에게 메시지 브로드캐스트
       clients.forEach((client) => {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(parsedMessage));
