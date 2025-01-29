@@ -22,12 +22,7 @@ ws.onmessage = (event) => {
       controlledSlider.value = data.sliderValue * 100; // 0~1 범위 → 0~100 범위
     }
   } catch (error) {
-    // 메시지가 JSON 형식이 아닌 경우 무시
-    if (event.data === "ping") {
-      console.log("[WebSocket] Ping received, ignoring.");
-    } else {
-      console.error("[WebSocket] Message error:", error);
-    }
+    console.error("[WebSocket] Message error:", error);
   }
 };
 
@@ -50,7 +45,7 @@ controlSlider.addEventListener("input", () => {
   }
 });
 
-// Bluetooth 장치 검색 및 선택
+// 페어링된 Bluetooth 장치 표시
 async function refreshPairedDevices() {
   try {
     console.log("[Bluetooth] Requesting a device...");
@@ -68,7 +63,10 @@ async function refreshPairedDevices() {
 
     console.log(`[Bluetooth] Found device: ${device.name} (${device.id})`);
   } catch (error) {
+    // 에러 발생 시 사용자에게 알림
     console.error("[Bluetooth] Error fetching devices:", error);
+    pairedDevicesList.innerHTML =
+      "<li>Error fetching devices or no devices selected. Please try again.</li>";
   }
 }
 
@@ -85,3 +83,12 @@ async function connectToDevice(device) {
 
 // 버튼 클릭 이벤트
 refreshDevicesButton.addEventListener("click", refreshPairedDevices);
+
+// 초기 실행
+document.addEventListener("DOMContentLoaded", refreshPairedDevices);
+
+
+
+// git add .
+// git commit -m "Updated with full functionality"
+// git push origin main
