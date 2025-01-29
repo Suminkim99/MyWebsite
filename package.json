@@ -1,0 +1,16 @@
+{
+  "name": "myproject",
+  "version": "1.0.0",
+  "description": "Web app with Bluetooth, WebSocket, and Video Streaming",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@abandonware/bluetooth-serial-port": "^2.0.7",
+    "ws": "^8.13.0",
+    "express": "^4.18.2"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}

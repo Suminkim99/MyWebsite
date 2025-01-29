@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bluetooth, Slider, and Video Streaming</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    input[type="range"] {
+      width: 50%;
+    }
+    iframe {
+      width: 80%;
+      height: 480px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bluetooth, Slider, and Video Streaming</h1>
+
+  <h2>Slider to control WebSocket</h2>
+  <input type="range" class="controlTD" min="0" max="100" value="50" />
+
+  <h2>Slider controlled by WebSocket</h2>
+  <input type="range" class="controlledByTD" min="0" max="100" value="50" />
+
+  <h2>VDO.Ninja Video Streaming</h2>
+  <iframe
+    src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD"
+    frameborder="0"
+    allow="camera; microphone; fullscreen"
+  ></iframe>
+
+  <script src="script.js"></script>
+</body>
+</html>
