@@ -38,30 +38,33 @@ sliderControl.addEventListener("input", () => {
   console.log("Sent to server:", data);
 });
 
-// Fetch only paired Bluetooth devices
-refreshDevicesButton.addEventListener("click", () => {
-  navigator.bluetooth.getDevices()
-    .then((devices) => {
-      pairedDevicesList.innerHTML = "";
-      devices.forEach((device) => {
-        const listItem = document.createElement("li");
-        listItem.textContent = device.name || "Unknown Device";
-        listItem.addEventListener("click", () => connectToDevice(device));
-        pairedDevicesList.appendChild(listItem);
-      });
+// Fetch available Bluetooth devices (alternative to getDevices)
+refreshDevicesButton.addEventListener("click", async () => {
+  try {
+    console.log("[Bluetooth] Requesting a device...");
+    const device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: ["battery_service"],
+    });
 
-      if (devices.length === 0) {
-        pairedDevicesList.textContent = "No paired devices found.";
-      }
-    })
-    .catch((error) => console.error("Error fetching paired devices:", error));
+    // Clear the list and show the selected device
+    pairedDevicesList.innerHTML = "";
+    const listItem = document.createElement("li");
+    listItem.textContent = `${device.name || "Unknown Device"} (${device.id})`;
+    listItem.addEventListener("click", () => connectToDevice(device));
+    pairedDevicesList.appendChild(listItem);
+    console.log("[Bluetooth] Selected device:", device);
+  } catch (error) {
+    console.error("[Bluetooth] Error requesting device:", error);
+  }
 });
 
-// Connect to a specific paired device
+// Connect to a specific device
 function connectToDevice(device) {
-  device.gatt.connect()
+  device.gatt
+    .connect()
     .then((server) => {
-      console.log(`Connected to ${device.name}`);
+      console.log(`[Bluetooth] Connected to device: ${device.name}`);
     })
-    .catch((error) => console.error("Error connecting to device:", error));
+    .catch((error) => console.error("[Bluetooth] Error connecting to device:", error));
 }
