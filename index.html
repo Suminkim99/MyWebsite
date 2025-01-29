@@ -1,41 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
   <title>Bluetooth, Slider & Stream</title>
   <style>
     body {
       text-align: center;
       font-family: Arial, sans-serif;
+      margin: 20px;
     }
-    h1, h2 {
-      margin: 20px 0;
+    h1 {
+      color: #333;
     }
     ul {
       list-style-type: none;
       padding: 0;
     }
     li {
+      margin: 10px 0;
       padding: 10px;
-      background-color: #f3f3f3;
-      margin: 5px;
+      background-color: #f0f0f0;
       cursor: pointer;
     }
     li:hover {
       background-color: #ddd;
     }
     button {
-      margin: 20px;
+      margin: 10px;
       padding: 10px 20px;
       font-size: 16px;
-      cursor: pointer;
     }
-    iframe {
-      margin-top: 20px;
+    input[type="range"] {
       width: 80%;
-      height: 400px;
-      border: 1px solid #ccc;
+      margin: 20px 0;
     }
   </style>
 </head>
@@ -43,22 +40,21 @@
   <h1>Bluetooth, Slider & Stream</h1>
   <h2>Paired Bluetooth Devices</h2>
   <ul id="pairedDevices">
-    <li>No paired devices found.</li>
+    <!-- Paired devices will be listed here -->
   </ul>
   <button id="refreshDevices">Refresh Paired Devices</button>
-
   <h2>Slider to control TD</h2>
-  <input type="range" id="controlSlider" min="0" max="100" value="50">
-
+  <input type="range" id="sliderControl" min="0" max="100" value="50" />
   <h2>Slider controlled by TD</h2>
-  <input type="range" id="controlledSlider" min="0" max="100" value="50" disabled>
-
+  <input type="range" id="sliderFeedback" min="0" max="100" value="50" />
   <h2>Video Stream</h2>
-  <iframe 
-    src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD" 
+  <iframe
+    src="https://vdo.ninja/?view=WRECZbw&bitrate=20000&codec=vp9&stereo&label=TD"
+    width="640"
+    height="360"
+    frameborder="0"
     allow="camera; microphone; fullscreen"
   ></iframe>
-
   <script src="script.js"></script>
 </body>
 </html>
